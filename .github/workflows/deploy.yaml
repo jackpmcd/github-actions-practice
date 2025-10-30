@@ -1,0 +1,46 @@
+name: "Deploy blog changes"
+
+on:
+  push:
+    branches: 
+      - main
+    paths-ignore:
+      - ".gitignore"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "LICENSE.txt"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/setup-node/env
+
+      - name: Run all linters
+        run: npm run lint:all
+
+      - name: Run scripts
+        run: node script/url-checker.js -t ${{ vars.URL_CHECKER_TIMEOUT }} -p ./docs
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v4
+
+      - uses: ./.github/actions/setup-node/env
+
+  deploy:
+    needs: [test, build]
