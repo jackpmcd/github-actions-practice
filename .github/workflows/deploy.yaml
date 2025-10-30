@@ -14,6 +14,11 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
@@ -35,12 +40,50 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
-    steps
+    steps:
       - uses: actions/checkout@v4
 
       - uses: actions/configure-pages@v4
 
       - uses: ./.github/actions/setup-node/env
 
+      - name: Build static pages
+        run: npm run eleventy:prod
+        env:
+          PATH_PREFIX: "/github-actions-practice/"
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v43
+        with:
+          name: site 
+          path: _site/
+
+
   deploy:
     needs: [test, build]
+
+    environment: 
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    - name: Download site
+        uses: actions/download-pages-artifact@v3
+        with:
+          name: site 
+          path: _site
+
+    - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+    - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+    - name: Report status
+        run: |
+          gh auth login --with-token <<<"${{ secrets.GITHUB_TOKEN }}"
+
+          gh issue create \
+            --title "<date> - Deployment: <status>" \
+            --body "URL: <url>"
