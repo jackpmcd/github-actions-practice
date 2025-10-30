@@ -81,9 +81,9 @@ jobs:
       uses: actions/deploy-pages@v4
 
     - name: Report status
-        run: |
-          gh auth login --with-token <<<"${{ secrets.GITHUB_TOKEN }}"
+      run: |
+        gh auth login --with-token <<<"${{ secrets.GITHUB_TOKEN }}"
 
-          gh issue create \
-            --title "<date> - Deployment: <status>" \
-            --body "URL: <url>"
+        gh issue create \
+          --title "<date> - Deployment: <status>" \
+          --body "URL: <url>"
