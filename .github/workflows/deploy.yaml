@@ -56,8 +56,7 @@ jobs:
         uses: actions/upload-pages-artifact@v43
         with:
           name: site 
-          path: _site/
-
+          path: _site
 
   deploy:
     needs: [test, build]
