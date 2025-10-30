@@ -53,7 +53,7 @@ jobs:
           PATH_PREFIX: "/github-actions-practice/"
 
       - name: Upload site
-        uses: actions/upload-pages-artifact@v43
+        uses: actions/upload-pages-artifact@v3
         with:
           name: site 
           path: _site
@@ -74,7 +74,7 @@ jobs:
           path: _site
 
     - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v4
 
     - name: Deploy to GitHub Pages
         id: deployment
