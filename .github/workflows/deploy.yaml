@@ -68,17 +68,17 @@ jobs:
 
     steps:
     - name: Download site
-        uses: actions/download-pages-artifact@v3
-        with:
-          name: site 
-          path: _site
+      uses: actions/download-pages-artifact@v3
+      with:
+        name: site 
+        path: _site
 
     - name: Setup Pages
-        uses: actions/configure-pages@v4
+      uses: actions/configure-pages@v4
 
     - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      id: deployment
+      uses: actions/deploy-pages@v4
 
     - name: Report status
         run: |
