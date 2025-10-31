@@ -39,11 +39,13 @@ jobs:
       #     npx npm-check-updates
       #   shell: bash
 
-      - name: Clean install
+      - name: Fresh npm install
         run: |
-          rm -rf node_modules package-lock.json
-          npm install
-
+          rm -rf node_modules
+          npm ci
+      
+      - name: Ensure npm-run-all is installed
+        run: npm install npm-run-all --save-dev
 
       - name: Run all linters
         run: npm run lint:all
