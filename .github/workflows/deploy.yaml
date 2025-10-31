@@ -34,8 +34,13 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm install -g npm-check-updates
+          npx npm-check-updates
         shell: bash
+      
+      - name: Ensure npm-run-all exists
+        run: npm install npm-run-all --save-dev
 
       - name: Run all linters
         run: npm run lint:all
