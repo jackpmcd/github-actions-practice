@@ -32,14 +32,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
 
-      # - uses: actions/cache@v4
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-node-
+      - name: Fetch npm cache
+        id: get-cache-paths
+        run: |
+          echo "npm-cache=$(npm env NPMCACHE)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.get-cache-paths.outputs.npm-cache }}
+          key: npm-cache-${{ hashFiles('**/npm.sum') }}
 
       - name: Install dependencies
         run: npm i
